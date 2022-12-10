@@ -62,7 +62,7 @@ For the second query, we delete three nodes after every two nodes, resulting in 
         };
 
 *****************************************************************/
-
+//time: O(n), sapce: O(1)
 Node *skipMdeleteN(Node *head, int n, int m)
 {
 	if(head == NULL || (n == 0 && m!= 0))
