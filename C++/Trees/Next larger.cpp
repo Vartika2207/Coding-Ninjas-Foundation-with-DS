@@ -43,6 +43,7 @@ Sample Output 2:
     };
 
 ************************************************************/
+#include<bits/stdc++.h>
 
 TreeNode<int>* getNextLargerElement(TreeNode<int>* root, int x) {
     
@@ -69,4 +70,27 @@ TreeNode<int>* getNextLargerElement(TreeNode<int>* root, int x) {
     }
     return nearest_max_node;
     
+}
+
+
+TreeNode<int>* getNextLargerElement_(TreeNode<int>* root, int x) {
+    if(!root) 
+       return NULL;
+
+    if(!root->children.size())
+       return root->data > x ? root : NULL;
+
+    TreeNode<int>* nextLargestNode = NULL;
+
+    if(root->data > x)
+       nextLargestNode = root;
+
+    for(int i=0; i<root->children.size(); i++) {
+        TreeNode<int>* node = getNextLargerElement(root->children[i],  x);
+        if(nextLargestNode == NULL)
+           nextLargestNode = node;
+        else if(node && node->data < nextLargestNode->data)
+           nextLargestNode = node;
+    }
+    return nextLargestNode;
 }
