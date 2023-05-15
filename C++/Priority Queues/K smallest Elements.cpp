@@ -1,7 +1,7 @@
 #include<bits/stdc++.h>
 #include <queue>
 
-//correct-old code, time: O(n), space: O(1)
+//correct-old code, time: O(nlogn), space: O(1)
 vector<int> kSmallest_approach1(int arr[], int n, int k){
     priority_queue<int>pq;
     vector<int>ans;
