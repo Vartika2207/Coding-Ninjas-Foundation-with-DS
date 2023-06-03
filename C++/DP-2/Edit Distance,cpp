@@ -1,0 +1,94 @@
+#include "bits/stdc++.h"
+/** Recursion **/
+// time: O(3^(min(n,m)))
+int editDistanceRec(string s1, string  s2) {
+	if(s1.size() == 0 || s2.size() == 0)
+	   return max(s1.size(), s2.size());
+
+    if(s1[0] == s2[0])
+	   return editDistanceRec(s1.substr(1), s2.substr(1));
+
+	int step1 = editDistanceRec(s1.substr(1), s2); // delete
+	int step2 = editDistanceRec(s1, s2.substr(1)); // insert
+	int step3 = editDistanceRec(s1.substr(1), s2.substr(1)); // replace
+
+    return 1 + min({step1, step2, step3});
+}
+
+
+/*** USING MEMOIZATION ***/
+// time: O(n*m)
+int editDistanceMemoHelper(string s, string l, int**ans){
+    if(s.size()==0 || l.size()==0) return max(s.size(),l.size());
+    
+    int m=s.size();
+    int n=l.size();
+    if(ans[m][n]!=-1) return ans[m][n];
+    
+    if(s[0]==l[0]) {
+        ans[m][n]=editDistanceMemoHelper(s.substr(1),l.substr(1),ans);
+    }
+    else{
+        ans[m-1][n]=editDistanceMemoHelper(s.substr(1),l,ans);
+        ans[m-1][n-1]=editDistanceMemoHelper(s.substr(1),l.substr(1),ans);
+        ans[m][n-1]=editDistanceMemoHelper(s,l.substr(1),ans);
+       
+        ans[m][n]=1+min(ans[m][n-1],min(ans[m-1][n-1],ans[m-1][n]));
+    }
+    return ans[m][n];
+}
+
+int editDistanceMemo(string s, string l){
+    int m=s.length();
+    int n=l.length();
+    int **ans=new int*[m+1];
+    for(int i=0;i<=m;i++){
+        ans[i]=new int[n+1];
+        for(int j=0;j<=n;j++){
+            ans[i][j]=-1;
+        }
+    }
+     int dis = editDistanceMemoHelper(s,l,ans); 
+
+    //  delete space
+
+    return dis;
+}
+
+
+/****USING DP ****/
+// time: O(n*m)
+int editDistanceDP(string s, string l){
+    if(s.size()==0 || l.size()==0) return max(s.size(),l.size());
+    
+    int m=s.size();
+    int n=l.size();
+    
+    int **dp=new int*[m+1];
+    for(int i=0;i<=m;i++){
+        dp[i]=new int[n+1]();
+    }
+    
+    for(int i=1;i<=m;i++){
+        dp[i][0]=i;
+    }
+    for(int i=1;i<=n;i++){
+        dp[0][i]=i;
+    }
+    for(int i=1;i<=m;i++){
+        for(int j=1;j<=n;j++){
+            if(s[i-1]==l[j-1]){
+                dp[i][j]=dp[i-1][j-1];
+            }
+            else{
+              dp[i][j] = 1 + min({dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]});
+            }
+        }
+    }
+    return dp[m][n];
+}
+// ------------------
+
+int editDistance(string s, string l) {
+    return editDistanceDP(s, l);
+}
